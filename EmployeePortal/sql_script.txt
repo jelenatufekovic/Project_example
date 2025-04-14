@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS public."WorkDepartment"
+(
+    "Id" uuid NOT NULL,
+    "Name" varchar NOT NULL,
+    CONSTRAINT "WorkDepartment_pkey" PRIMARY KEY ("Id")
+)
+
+CREATE TABLE IF NOT EXISTS public."Employee"
+(
+    "Id" uuid NOT NULL,
+    "FirstName" varchar NOT NULL,
+	"LastName" varchar not null,
+	"DateOfBirth" date not null,
+	"WorkDepartmentId" uuid,
+    CONSTRAINT "Employee_pkey" PRIMARY KEY ("Id"),
+	CONSTRAINT "Employee_WorkDepartment_WorkDepartmentId" FOREIGN KEY ("WorkDepartmentId") references "WorkDepartment" ("Id")
+	
+)
