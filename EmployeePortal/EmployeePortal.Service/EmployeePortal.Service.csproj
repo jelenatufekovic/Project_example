@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EmployeePortal.Repository\EmployeePortal.Repository.csproj" />
+    <ProjectReference Include="..\EmployeePortal.Service.Common\EmployeePortal.Service.Common.csproj" />
+  </ItemGroup>
+
+</Project>
