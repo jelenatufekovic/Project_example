@@ -1,18 +1,24 @@
 ﻿using EmployeePortal.Model;
 using EmployeePortal.Repository.Common;
+using Microsoft.Extensions.Configuration;
 using Npgsql;
 
 namespace EmployeePortal.Repository
 {
     public class EmployeeRepository : IEmployeeRepository
     {
-        private const string connectionString = "Server=localhost;Port=5433;Userid=postgres;Password=postgres;Database=EmployeePortalDB";
+        public EmployeeRepository(IConfiguration configuration)
+        {
+            _connectionString = configuration.GetConnectionString("DefaultConnectionString");
+        }
+
+        private string _connectionString;
 
         public async Task<bool> DeleteEmployeeAsync(Guid id)
         {
             try
             {
-                using (var connection = new NpgsqlConnection(connectionString))
+                using (var connection = new NpgsqlConnection(_connectionString))
                 {
                     var commandText = "DELETE FROM \"Employee\" WHERE \"Id\"= @id;";
                     using var command = new NpgsqlCommand(commandText, connection);
@@ -39,7 +45,7 @@ namespace EmployeePortal.Repository
             try
             {
                 var employees = new List<Employee>();
-                using var connection = new NpgsqlConnection(connectionString);
+                using var connection = new NpgsqlConnection(_connectionString);
                 var commandText = "SELECT * FROM \"Employee\" e LEFT JOIN \"WorkDepartment\" wp ON wp.\"Id\"=e.\"WorkDepartmentId\";";
                 using var command = new NpgsqlCommand(commandText, connection);
 
@@ -81,7 +87,7 @@ namespace EmployeePortal.Repository
             try
             {
                 var employee = new Employee();
-                using var connection = new NpgsqlConnection(connectionString);
+                using var connection = new NpgsqlConnection(_connectionString);
                 var commandText = "SELECT * FROM \"Employee\" e LEFT JOIN \"WorkDepartment\" wp ON wp.\"Id\"=e.\"WorkDepartmentId\" WHERE e.\"Id\"= @id;";
                 using var command = new NpgsqlCommand(commandText, connection);
 
@@ -120,7 +126,7 @@ namespace EmployeePortal.Repository
         {
             try
             {
-                using var connection = new NpgsqlConnection(connectionString);
+                using var connection = new NpgsqlConnection(_connectionString);
                 var commandText = $"INSERT INTO \"Employee\" VALUES( @id, @firstName, @lastName, @dob, @workDepartmentId);";
 
                 using var command = new NpgsqlCommand(commandText, connection);
@@ -149,7 +155,7 @@ namespace EmployeePortal.Repository
         {
             try
             {
-                using var connection = new NpgsqlConnection(connectionString);
+                using var connection = new NpgsqlConnection(_connectionString);
                 var selectCommandText = "SELECT * FROM \"Employee\" WHERE \"Id\"= @id;";
                 using var command = new NpgsqlCommand(selectCommandText, connection);
 

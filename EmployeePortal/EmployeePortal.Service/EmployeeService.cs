@@ -7,34 +7,34 @@ namespace EmployeePortal.Service
 {
     public class EmployeeService : IEmployeeService
     {
+        private IEmployeeRepository _repository;
+
+        public EmployeeService(IEmployeeRepository repository)
+        { _repository = repository; }
+
         public async Task<bool> DeleteEmployeeAsync(Guid id)
         {
-            var repository = new EmployeeRepository();
-            return await repository.DeleteEmployeeAsync(id);
+            return await _repository.DeleteEmployeeAsync(id);
         }
 
         public async Task<List<Employee>> GetAllAsync()
         {
-            var repository = new EmployeeRepository();
-            return await repository.GetAllAsync();
+            return await _repository.GetAllAsync();
         }
 
         public async Task<Employee> GetByIdAsync(Guid id)
         {
-            var repository = new EmployeeRepository();
-            return await repository.GetByIdAsync(id);
+            return await _repository.GetByIdAsync(id);
         }
 
         public async Task<bool> SaveEmployeeAsync(Employee employee)
         {
-            var repository = new EmployeeRepository();
-            return await repository.SaveEmployeeAsync(employee);
+            return await _repository.SaveEmployeeAsync(employee);
         }
 
         public async Task<bool> UpdateEmployeeAsync(Guid id, Employee employee)
         {
-            var repository = new EmployeeRepository();
-            return await repository.UpdateEmployeeAsync(id, employee);
+            return await _repository.UpdateEmployeeAsync(id, employee);
         }
     }
 }

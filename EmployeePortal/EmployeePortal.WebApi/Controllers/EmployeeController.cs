@@ -1,5 +1,6 @@
 ﻿using EmployeePortal.Model;
 using EmployeePortal.Service;
+using EmployeePortal.Service.Common;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 
@@ -11,12 +12,18 @@ namespace EmployeePortal.WebApi.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
+        private IEmployeeService _service;
+
+        public EmployeeController(IEmployeeService service)
+        {
+            _service = service;
+        }
+
         //data annotation example for route
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAllAsync()
         {
-            var service = new EmployeeService();
-            var employees = await service.GetAllAsync();
+            var employees = await _service.GetAllAsync();
             if (employees == null)
             {
                 return BadRequest();
@@ -27,8 +34,7 @@ namespace EmployeePortal.WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByIdAsync(Guid id)
         {
-            var service = new EmployeeService();
-            var employee = await service.GetByIdAsync(id);
+            var employee = await _service.GetByIdAsync(id);
             if (employee == null)
             {
                 return BadRequest();
@@ -39,8 +45,7 @@ namespace EmployeePortal.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Employee newEmployee)
         {
-            var service = new EmployeeService();
-            var isSuccessful = await service.SaveEmployeeAsync(newEmployee);
+            var isSuccessful = await _service.SaveEmployeeAsync(newEmployee);
             if (!isSuccessful)
             {
                 return BadRequest();
@@ -51,8 +56,7 @@ namespace EmployeePortal.WebApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAsync(Guid id, Employee updatedEmployee)
         {
-            var service = new EmployeeService();
-            var isSuccessful = await service.UpdateEmployeeAsync(id, updatedEmployee);
+            var isSuccessful = await _service.UpdateEmployeeAsync(id, updatedEmployee);
             if (!isSuccessful)
             {
                 return BadRequest();
@@ -63,8 +67,7 @@ namespace EmployeePortal.WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
-            var service = new EmployeeService();
-            var isSuccessful = await service.DeleteEmployeeAsync(id);
+            var isSuccessful = await _service.DeleteEmployeeAsync(id);
             if (!isSuccessful)
             {
                 return BadRequest();
