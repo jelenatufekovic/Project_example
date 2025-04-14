@@ -8,7 +8,7 @@ namespace EmployeePortal.Repository
     {
         private const string connectionString = "Server=localhost;Port=5433;Userid=postgres;Password=postgres;Database=EmployeePortalDB";
 
-        public bool DeleteEmployee(Guid id)
+        public async Task<bool> DeleteEmployeeAsync(Guid id)
         {
             try
             {
@@ -21,7 +21,7 @@ namespace EmployeePortal.Repository
 
                     connection.Open();
 
-                    var numberOfCommits = command.ExecuteNonQuery();
+                    var numberOfCommits = await command.ExecuteNonQueryAsync();
 
                     connection.Close();
 
@@ -34,7 +34,7 @@ namespace EmployeePortal.Repository
             }
         }
 
-        public List<Employee> GetAll()
+        public async Task<List<Employee>> GetAllAsync()
         {
             try
             {
@@ -45,7 +45,7 @@ namespace EmployeePortal.Repository
 
                 connection.Open();
 
-                using var reader = command.ExecuteReader();
+                using var reader = await command.ExecuteReaderAsync();
 
                 if (reader.HasRows)
                 {
@@ -76,7 +76,7 @@ namespace EmployeePortal.Repository
             }
         }
 
-        public Employee GetById(Guid id)
+        public async Task<Employee> GetByIdAsync(Guid id)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace EmployeePortal.Repository
 
                 connection.Open();
 
-                using var reader = command.ExecuteReader();
+                using var reader = await command.ExecuteReaderAsync();
 
                 if (reader.HasRows)
                 {
@@ -116,7 +116,7 @@ namespace EmployeePortal.Repository
             }
         }
 
-        public bool SaveEmployee(Employee newEmployee)
+        public async Task<bool> SaveEmployeeAsync(Employee newEmployee)
         {
             try
             {
@@ -133,7 +133,7 @@ namespace EmployeePortal.Repository
 
                 connection.Open();
 
-                var numberOfCommits = command.ExecuteNonQuery();
+                var numberOfCommits = await command.ExecuteNonQueryAsync();
 
                 connection.Close();
 
@@ -145,7 +145,7 @@ namespace EmployeePortal.Repository
             }
         }
 
-        public bool UpdateEmployee(Guid id, Employee updatedEmployee)
+        public async Task<bool> UpdateEmployeeAsync(Guid id, Employee updatedEmployee)
         {
             try
             {
@@ -157,7 +157,7 @@ namespace EmployeePortal.Repository
 
                 connection.Open();
 
-                using var reader = command.ExecuteReader();
+                using var reader = await command.ExecuteReaderAsync();
 
                 if (!reader.HasRows) { return false; }
 
@@ -171,7 +171,7 @@ namespace EmployeePortal.Repository
                 command.Parameters.AddWithValue("@dob", updatedEmployee.DateOfBirth);
                 command.Parameters.AddWithValue("@workDepartmentId", NpgsqlTypes.NpgsqlDbType.Uuid, updatedEmployee.WorkDepartmentId is null ? DBNull.Value : updatedEmployee.WorkDepartmentId.Value);
 
-                var numberOfCommits = command.ExecuteNonQuery();
+                var numberOfCommits = await command.ExecuteNonQueryAsync();
 
                 return numberOfCommits > 0;
             }
