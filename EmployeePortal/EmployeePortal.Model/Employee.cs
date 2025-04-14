@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace EmployeePortal.WebApi
+﻿namespace EmployeePortal.Model
 {
     public class Employee
     {
