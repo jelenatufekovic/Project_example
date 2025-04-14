@@ -13,10 +13,10 @@ namespace EmployeePortal.WebApi.Controllers
     {
         //data annotation example for route
         [HttpGet("getAll")]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
             var service = new EmployeeService();
-            var employees = service.GetAll();
+            var employees = await service.GetAllAsync();
             if (employees == null)
             {
                 return BadRequest();
@@ -25,10 +25,10 @@ namespace EmployeePortal.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(Guid id)
+        public async Task<IActionResult> GetByIdAsync(Guid id)
         {
             var service = new EmployeeService();
-            var employee = service.GetById(id);
+            var employee = await service.GetByIdAsync(id);
             if (employee == null)
             {
                 return BadRequest();
@@ -37,10 +37,10 @@ namespace EmployeePortal.WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Employee newEmployee)
+        public async Task<IActionResult> Post([FromBody] Employee newEmployee)
         {
             var service = new EmployeeService();
-            var isSuccessful = service.SaveEmployee(newEmployee);
+            var isSuccessful = await service.SaveEmployeeAsync(newEmployee);
             if (!isSuccessful)
             {
                 return BadRequest();
@@ -49,10 +49,10 @@ namespace EmployeePortal.WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(Guid id, Employee updatedEmployee)
+        public async Task<IActionResult> PutAsync(Guid id, Employee updatedEmployee)
         {
             var service = new EmployeeService();
-            var isSuccessful = service.UpdateEmployee(id, updatedEmployee);
+            var isSuccessful = await service.UpdateEmployeeAsync(id, updatedEmployee);
             if (!isSuccessful)
             {
                 return BadRequest();
@@ -61,10 +61,10 @@ namespace EmployeePortal.WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> DeleteAsync(Guid id)
         {
             var service = new EmployeeService();
-            var isSuccessful = service.DeleteEmployee(id);
+            var isSuccessful = await service.DeleteEmployeeAsync(id);
             if (!isSuccessful)
             {
                 return BadRequest();

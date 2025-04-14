@@ -4,14 +4,14 @@ namespace EmployeePortal.Repository.Common
 {
     public interface IEmployeeRepository
     {
-        bool UpdateEmployee(Guid id, Employee employee);
+        Task<bool> UpdateEmployeeAsync(Guid id, Employee employee);
 
-        bool DeleteEmployee(Guid id);
+        Task<bool> DeleteEmployeeAsync(Guid id);
 
-        List<Employee> GetAll();
+        Task<List<Employee>> GetAllAsync();
 
-        Employee GetById(Guid id);
+        Task<Employee> GetByIdAsync(Guid id);
 
-        bool SaveEmployee(Employee employee);
+        Task<bool> SaveEmployeeAsync(Employee employee);
     }
 }
