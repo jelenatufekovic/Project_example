@@ -1,59 +1,68 @@
 import "./App.css";
+import { useState, useEffect } from "react";
 import { EmployeeForm } from "./components/EmployeeForm";
 import { EmployeeGrid } from "./components/EmployeeGrid";
-import { EmployeeEditForm } from "./components/EmployeeEditForm";
-function App() {
-  const storedEmployees = JSON.parse(localStorage.getItem("employees")) || [];
-  const editIndex = localStorage.getItem("editIndex");
-  const initialData =
-    editIndex !== null ? storedEmployees[parseInt(editIndex, 10)] : {};
+
+export default function App() {
+  const [employees, setEmployees] = useState([]);
+  const [editIndex, setEditIndex] = useState(null);
+  const [formData, setFormData] = useState({});
+
+  useEffect(() => {
+    const stored = JSON.parse(localStorage.getItem("employees")) || [];
+    setEmployees(stored);
+  }, []);
+
+  useEffect(() => {
+    if (editIndex !== null) {
+      setFormData(employees[editIndex]);
+    } else {
+      setFormData({});
+    }
+  }, [editIndex, employees]);
 
   const handleSave = (employee) => {
-    const stored = JSON.parse(localStorage.getItem("employees")) || [];
-
+    const updated = [...employees];
     if (editIndex !== null) {
-      stored[parseInt(editIndex, 10)] = employee;
-      localStorage.removeItem("editIndex");
+      updated[editIndex] = employee;
+      setEditIndex(null);
     } else {
-      stored.push(employee);
+      updated.push(employee);
     }
-
-    localStorage.setItem("employees", JSON.stringify(stored));
-    window.location.reload();
+    setEmployees(updated);
+    localStorage.setItem("employees", JSON.stringify(updated));
+    setFormData({});
   };
 
   const handleDelete = (index) => {
-    const stored = JSON.parse(localStorage.getItem("employees")) || [];
-    stored.splice(index, 1);
-    localStorage.setItem("employees", JSON.stringify(stored));
-    const editIndex = localStorage.getItem("editIndex");
-    if (editIndex !== null && parseInt(editIndex, 10) === index) {
-      localStorage.removeItem("editIndex");
-      localStorage.removeItem("employee");
+    const updated = [...employees];
+    updated.splice(index, 1);
+    setEmployees(updated);
+    localStorage.setItem("employees", JSON.stringify(updated));
+    if (editIndex === index) {
+      setEditIndex(null);
+    } else if (editIndex !== null && index < editIndex) {
+      setEditIndex(editIndex - 1);
     }
-    window.location.reload();
   };
 
   const handleUpdate = (index) => {
-    localStorage.setItem("editIndex", index);
-    window.location.reload();
+    setEditIndex(index);
   };
 
   return (
     <div className="app-container">
       <h1 className="app-title">Employee Portal</h1>
-      {editIndex === null ? (
-        <EmployeeForm onSave={handleSave} />
-      ) : (
-        <EmployeeEditForm onSave={handleSave} initialData={initialData} />
-      )}
+      <EmployeeForm
+        onSave={handleSave}
+        formData={formData}
+        setFormData={setFormData}
+      />
       <EmployeeGrid
-        employees={storedEmployees}
+        employees={employees}
         onDelete={handleDelete}
         onUpdate={handleUpdate}
       />
     </div>
   );
 }
-
-export default App;
