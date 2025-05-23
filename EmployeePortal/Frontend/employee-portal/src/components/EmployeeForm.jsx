@@ -1,7 +1,7 @@
 import { Button } from "./Button";
 import "../styles/EmployeeForm.css";
 
-export const EmployeeForm = ({ onSave, formData, setFormData }) => {
+export const EmployeeForm = ({ onSave, formData, setFormData, positions }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -12,7 +12,7 @@ export const EmployeeForm = ({ onSave, formData, setFormData }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (formData.name || formData.email || formData.position) {
+    if (formData.name || formData.email || formData.workDepartment) {
       onSave(formData);
     }
   };
@@ -20,10 +20,17 @@ export const EmployeeForm = ({ onSave, formData, setFormData }) => {
   return (
     <form onSubmit={handleSubmit} className="employee-form">
       <input
-        name="name"
-        value={formData.name || ""}
+        name="firstName"
+        value={formData.firstName || ""}
         onChange={handleChange}
-        placeholder="Name"
+        placeholder="First name"
+        className="input"
+      />
+      <input
+        name="lastName"
+        value={formData.lastName || ""}
+        onChange={handleChange}
+        placeholder="Last name"
         className="input"
       />
       <input
@@ -34,13 +41,21 @@ export const EmployeeForm = ({ onSave, formData, setFormData }) => {
         placeholder="Email"
         className="input"
       />
-      <input
-        name="position"
-        value={formData.position || ""}
-        onChange={handleChange}
-        placeholder="Position"
+      <select
+        name="workDepartment"
+        value={formData.workDepartmentId || ""}
+        onChange={(e) =>
+          setFormData({ ...formData, workDepartmentId: e.target.value })
+        }
         className="input"
-      />
+      >
+        <option value="">Select a position</option>
+        {positions.map((pos) => (
+          <option key={pos.id} value={pos.id}>
+            {pos.name}
+          </option>
+        ))}
+      </select>
       <Button type="primary">Save</Button>
     </form>
   );

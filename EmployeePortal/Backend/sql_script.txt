@@ -16,3 +16,6 @@ CREATE TABLE IF NOT EXISTS public."Employee"
 	CONSTRAINT "Employee_WorkDepartment_WorkDepartmentId" FOREIGN KEY ("WorkDepartmentId") references "WorkDepartment" ("Id")
 	
 )
+
+ALTER TABLE "Employee"
+ADD COLUMN IF NOT EXISTS "Email" varchar;
