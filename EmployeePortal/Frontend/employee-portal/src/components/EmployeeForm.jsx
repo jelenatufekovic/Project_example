@@ -1,7 +1,15 @@
 import { Button } from "./Button";
 import "../styles/EmployeeForm.css";
+import { useNavigate } from "react-router-dom";
 
-export const EmployeeForm = ({ onSave, formData, setFormData, positions }) => {
+export const EmployeeForm = ({
+  onSave,
+  formData,
+  setFormData,
+  positions,
+  isEdit,
+}) => {
+  const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -57,6 +65,11 @@ export const EmployeeForm = ({ onSave, formData, setFormData, positions }) => {
         ))}
       </select>
       <Button type="primary">Save</Button>
+      {isEdit && (
+        <Button type="primary" onClick={() => navigate("/employees")}>
+          Cancel
+        </Button>
+      )}
     </form>
   );
 };
