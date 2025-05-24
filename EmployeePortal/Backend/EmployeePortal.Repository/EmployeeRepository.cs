@@ -61,13 +61,14 @@ namespace EmployeePortal.Repository
                         employee.Id = Guid.Parse(reader[0].ToString());
                         employee.FirstName = reader[1].ToString();
                         employee.LastName = reader["LastName"].ToString();
+                        employee.Email = reader["Email"].ToString();
                         employee.DateOfBirth = reader.GetFieldValue<DateOnly>(3);
                         employee.WorkDepartmentId = Guid.TryParse(reader[4].ToString(), out var result) ? result : null; ;
                         if (employee.WorkDepartmentId != null)
                         {
                             var workDepartment = new WorkDepartment();
                             workDepartment.Id = employee.WorkDepartmentId.Value;
-                            workDepartment.Name = reader[6].ToString();
+                            workDepartment.Name = reader[7].ToString();
                             employee.WorkDepartment = workDepartment;
                         }
 
@@ -104,13 +105,14 @@ namespace EmployeePortal.Repository
                     employee.Id = Guid.Parse(reader[0].ToString());
                     employee.FirstName = reader[1].ToString();
                     employee.LastName = reader["LastName"].ToString();
+                    employee.Email = reader["Email"].ToString();
                     employee.DateOfBirth = reader.GetFieldValue<DateOnly>(3);
                     employee.WorkDepartmentId = Guid.TryParse(reader[4].ToString(), out var result) ? result : null;
                     if (employee.WorkDepartmentId != null)
                     {
                         var workDepartment = new WorkDepartment();
                         workDepartment.Id = employee.WorkDepartmentId.Value;
-                        workDepartment.Name = reader[6].ToString();
+                        workDepartment.Name = reader[7].ToString();
                         employee.WorkDepartment = workDepartment;
                     }
                 }
@@ -127,13 +129,14 @@ namespace EmployeePortal.Repository
             try
             {
                 using var connection = new NpgsqlConnection(_connectionString);
-                var commandText = $"INSERT INTO \"Employee\" VALUES( @id, @firstName, @lastName, @dob, @workDepartmentId);";
+                var commandText = $"INSERT INTO \"Employee\" VALUES( @id, @firstName, @lastName, @dob, @workDepartmentId, @email);";
 
                 using var command = new NpgsqlCommand(commandText, connection);
 
                 command.Parameters.AddWithValue("@id", NpgsqlTypes.NpgsqlDbType.Uuid, Guid.NewGuid());
                 command.Parameters.AddWithValue("@firstName", newEmployee.FirstName);
                 command.Parameters.AddWithValue("@lastName", newEmployee.LastName);
+                command.Parameters.AddWithValue("@email", newEmployee.Email);
                 command.Parameters.AddWithValue("@dob", newEmployee.DateOfBirth);
                 command.Parameters.AddWithValue("@workDepartmentId", NpgsqlTypes.NpgsqlDbType.Uuid, newEmployee.WorkDepartmentId is null ? DBNull.Value : newEmployee.WorkDepartmentId.Value);
 
@@ -168,12 +171,13 @@ namespace EmployeePortal.Repository
                 if (!reader.HasRows) { return false; }
 
                 reader.Close();
-                var updateCommandText = "UPDATE \"Employee\" SET \"FirstName\"=@firstName, \"LastName\"=@lastName, \"DateOfBirth\"=@dob, \"WorkDepartmentId\"=@workDepartmentId WHERE \"Id\"=@id;";
+                var updateCommandText = "UPDATE \"Employee\" SET \"FirstName\"=@firstName, \"LastName\"=@lastName, \"DateOfBirth\"=@dob, \"WorkDepartmentId\"=@workDepartmentId,  \"Email\"=@email WHERE \"Id\"=@id;";
                 command.CommandText = updateCommandText;
 
                 command.Parameters.AddWithValue("@id", id);
                 command.Parameters.AddWithValue("@firstName", updatedEmployee.FirstName);
                 command.Parameters.AddWithValue("@lastName", updatedEmployee.LastName);
+                command.Parameters.AddWithValue("@email", updatedEmployee.Email);
                 command.Parameters.AddWithValue("@dob", updatedEmployee.DateOfBirth);
                 command.Parameters.AddWithValue("@workDepartmentId", NpgsqlTypes.NpgsqlDbType.Uuid, updatedEmployee.WorkDepartmentId is null ? DBNull.Value : updatedEmployee.WorkDepartmentId.Value);
 

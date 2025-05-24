@@ -5,6 +5,8 @@ using EmployeePortal.Repository;
 using EmployeePortal.Repository.Common;
 using EmployeePortal.Service;
 using EmployeePortal.Service.Common;
+using WorkDepartmentPortal.Repository;
+using WorkDepartmentPortal.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +26,19 @@ builder.Host
         containerBuilder.RegisterApiControllers();
         containerBuilder.RegisterType<EmployeeService>().As<IEmployeeService>();
         containerBuilder.RegisterType<EmployeeRepository>().As<IEmployeeRepository>();
+        containerBuilder.RegisterType<WorkDepartmentService>().As<IWorkDepartmentService>();
+        containerBuilder.RegisterType<WorkDepartmentRepository>().As<IWorkDepartmentRepository>();
     });
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("WebApp", policy =>
+    {
+        policy.AllowAnyOrigin()
+       .AllowAnyHeader()
+       .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -36,6 +50,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("WebApp");
 
 app.UseAuthorization();
 

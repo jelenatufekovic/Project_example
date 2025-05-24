@@ -1,0 +1,25 @@
+.employee-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .employee-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.employee-card {
+  border: 1px solid #d1d5db;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.employee-name {
+  font-weight: bold;
+  font-size: 1.125rem;
+}
